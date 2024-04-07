@@ -1,7 +1,7 @@
-import { Effect } from "effect";
+import { Effect, Option } from "effect";
 import { model,Schema } from "mongoose";
 
-import { DuplicateError } from "@/lib/errors";
+import { DatabaseError, DuplicateError, NotExistError } from "@/lib/errors";
 import type { User as UserType } from "@/lib/schemas";
 
 const userSchema = new Schema<UserType>(
@@ -21,3 +21,17 @@ export const createUser = (user: UserType): Effect.Effect<UserType, DuplicateErr
 		catch: () => new DuplicateError("Email already in used"),
 	});
 };
+
+export const findUserByEmail = (email: string) =>
+	Effect.tryPromise({
+		try: () =>
+			User.findOne({ email })
+				.then((user) => (user ? Option.some(user) : Option.none()))
+				.then(Option.getOrThrowWith(() => new NotExistError("User not exist"))),
+		catch: (e) => {
+			if (e instanceof NotExistError) {
+				return e;
+			}
+			return new DatabaseError("unexpected error occured while find user by email");
+		},
+	});

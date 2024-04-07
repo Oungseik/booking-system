@@ -19,3 +19,35 @@ export class DuplicateError extends Error {
 		}
 	}
 }
+
+export class NotExistError extends Error {
+	readonly _tag = "NotExistError";
+
+	constructor(message?: string) {
+		super();
+		if (message) {
+			this.message = message;
+		}
+	}
+}
+
+export class AuthenticationError extends Error {
+	readonly _tag = "AuthenticationError";
+	constructor(message?: string) {
+		super();
+		if (message) {
+			this.message = message;
+		}
+	}
+}
+
+export class DatabaseError extends Error {
+	readonly _tag = "DatabaseError";
+
+	constructor(message?: string) {
+		super();
+		if (message) {
+			this.message = message;
+		}
+	}
+}

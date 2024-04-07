@@ -1,0 +1,39 @@
+###
+# ====== should login successful
+POST http://localhost:8080/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "oung@gmail.com", 
+    "password": "12345678" 
+}
+
+###
+# ====== should password not match
+POST http://localhost:8080/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "oung@gmail.com", 
+    "password": "12345689" 
+}
+
+###
+# ====== should user not exist
+POST http://localhost:8080/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "notfound@gmail.com", 
+    "password": "12345689" 
+}
+
+###
+# ====== should input invalid
+POST http://localhost:8080/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "notfound.com", 
+    "password": "12345" 
+}
