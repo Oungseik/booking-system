@@ -1,5 +1,6 @@
-import jwt from "jsonwebtoken";
 import type { Handler } from "express";
+import jwt from "jsonwebtoken";
+
 import config from "@/config";
 
 const authenticateToken = ((req, res, next) => {
@@ -11,13 +12,11 @@ const authenticateToken = ((req, res, next) => {
 	}
 
 	jwt.verify(token, config.jwtSecret, (err, payload) => {
-		if (err) {
+		if (err || typeof payload === "string" || !payload?.email) {
 			return res.status(403).json({ error: "Forbidden: Invalid token" });
 		}
 
-		//@ts-expect-error - using js feature
-		req.email = payload?.email;
-
+		req.email = payload.email;
 		next();
 	});
 }) satisfies Handler;
