@@ -1,5 +1,4 @@
-import { type InferSchemaType,model, Schema } from "mongoose";
-
+import { model, Schema, type InferSchemaType } from "mongoose";
 import { countries } from "./countries";
 
 const classSchema = new Schema({
