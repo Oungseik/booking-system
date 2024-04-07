@@ -28,6 +28,10 @@ export const User = model("User", userSchema);
 
 export type User = InferSchemaType<typeof userSchema>;
 
+// --------------------------------------------------
+//  Helper functions section
+// --------------------------------------------------
+
 export const createUser = (user: Partial<User>): Effect.Effect<User, DuplicateError, never> => {
 	return Effect.tryPromise({
 		try: () => User.create(user),
@@ -49,6 +53,23 @@ const findOne = (
 	Effect.tryPromise({
 		try: () =>
 			User.findOne(entry)
+				.then((user) => (user ? Option.some(user) : Option.none()))
+				.then(Option.getOrThrowWith(() => new NotExistError("User not exist"))),
+		catch: (e) => {
+			if (e instanceof NotExistError) {
+				return e;
+			}
+			return new DatabaseError("unexpected error occured while find user by email");
+		},
+	});
+
+export const updateOneByEmail = (
+	email: string,
+	update: Partial<User>
+): Effect.Effect<User, DatabaseError | NotExistError, never> =>
+	Effect.tryPromise({
+		try: () =>
+			User.findOneAndUpdate({ email }, update)
 				.then((user) => (user ? Option.some(user) : Option.none()))
 				.then(Option.getOrThrowWith(() => new NotExistError("User not exist"))),
 		catch: (e) => {

@@ -4,17 +4,34 @@ import { ZodError } from "zod";
 import { Types } from "mongoose";
 
 import { AuthenticationError, ParseError } from "./errors";
-import { type LoginData, loginSchema, type RegisterData, registerSchema } from "./schemas";
+import {
+	type LoginInput,
+	loginSchema,
+	type RegisterInput,
+	registerSchema,
+	type changePwInput,
+	changePwSchema,
+} from "./schemas";
 
-export const parseRegisterData = (data: unknown): Effect.Effect<RegisterData, ParseError, never> =>
+export const parseRegisterInput = (
+	data: unknown
+): Effect.Effect<RegisterInput, ParseError, never> =>
 	Effect.try({
 		try: () => registerSchema.parse(data),
 		catch: (e) => new ParseError((e as ZodError).message),
 	});
 
-export const parseLoginData = (data: unknown): Effect.Effect<LoginData, ParseError, never> =>
+export const parseLoginInput = (data: unknown): Effect.Effect<LoginInput, ParseError, never> =>
 	Effect.try({
 		try: () => loginSchema.parse(data),
+		catch: (e) => new ParseError((e as ZodError).message),
+	});
+
+export const parseChangePwInput = (
+	data: unknown
+): Effect.Effect<changePwInput, ParseError, never> =>
+	Effect.try({
+		try: () => changePwSchema.parse(data),
 		catch: (e) => new ParseError((e as ZodError).message),
 	});
 
