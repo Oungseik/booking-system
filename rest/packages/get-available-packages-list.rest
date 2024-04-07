@@ -1,0 +1,16 @@
+GET http://localhost:8080/api/packages HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91bmdAZ21haWwuY29tIiwiaWF0IjoxNzEyNDc5MjA2LCJleHAiOjE3MTUwNzEyMDZ9.YkeW5QHoVyX2GLBQu2whdQoedr0unthTtB5W6TosME8
+
+###
+# =============== should fail due to payment error ==================
+POST http://localhost:8080/api/packages/subscribe/SG-PtP-1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91bmdAZ21haWwuY29tIiwiaWF0IjoxNzEyNDc5MjA2LCJleHAiOjE3MTUwNzEyMDZ9.YkeW5QHoVyX2GLBQu2whdQoedr0unthTtB5W6TosME8
+
+###
+# =============== should successfully subscribe package ==================
+POST http://localhost:8080/api/packages/subscribe/SG-BcP-1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91bmdAZ21haWwuY29tIiwiaWF0IjoxNzEyNDc5MjA2LCJleHAiOjE3MTUwNzEyMDZ9.YkeW5QHoVyX2GLBQu2whdQoedr0unthTtB5W6TosME8
+

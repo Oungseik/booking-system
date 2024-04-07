@@ -1,16 +1,16 @@
 import bcrypt from "bcrypt";
 import { Effect } from "effect";
-import { ZodError } from "zod";
 import { Types } from "mongoose";
+import { ZodError } from "zod";
 
 import { AuthenticationError, ParseError } from "./errors";
 import {
+	type changePwInput,
+	changePwSchema,
 	type LoginInput,
 	loginSchema,
 	type RegisterInput,
 	registerSchema,
-	type changePwInput,
-	changePwSchema,
 } from "./schemas";
 
 export const parseRegisterInput = (

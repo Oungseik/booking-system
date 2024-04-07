@@ -3,7 +3,7 @@ import { Router } from "express";
 
 import { parseId } from "@/lib/parsers";
 
-import { createUser, findUserByEmail, findUserById } from "@/model/users.model";
+import { findUserByEmail, findUserById } from "@/model/users.model";
 
 const router = Router();
 

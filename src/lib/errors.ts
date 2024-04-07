@@ -51,3 +51,14 @@ export class DatabaseError extends Error {
 		}
 	}
 }
+
+export class PaymentError extends Error {
+	readonly _tag = "PaymentError";
+
+	constructor(message?: string) {
+		super();
+		if (message) {
+			this.message = message;
+		}
+	}
+}

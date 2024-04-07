@@ -53,6 +53,7 @@ const findOne = (
 	Effect.tryPromise({
 		try: () =>
 			User.findOne(entry)
+				.lean()
 				.then((user) => (user ? Option.some(user) : Option.none()))
 				.then(Option.getOrThrowWith(() => new NotExistError("User not exist"))),
 		catch: (e) => {
@@ -65,11 +66,13 @@ const findOne = (
 
 export const updateOneByEmail = (
 	email: string,
-	update: Partial<User>
+	update: Partial<User> | Record<string, unknown>,
+	populate?: string | string[]
 ): Effect.Effect<User, DatabaseError | NotExistError, never> =>
 	Effect.tryPromise({
 		try: () =>
-			User.findOneAndUpdate({ email }, update)
+			User.findOneAndUpdate({ email }, update, { new: true, populate })
+				.lean()
 				.then((user) => (user ? Option.some(user) : Option.none()))
 				.then(Option.getOrThrowWith(() => new NotExistError("User not exist"))),
 		catch: (e) => {
