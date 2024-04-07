@@ -1,5 +1,5 @@
 # ============== should get the user information =====================
-GET http://localhost:8080/api/users HTTP/1.1
+GET http://localhost:8080/api/users?populate=packages HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91bmdAZ21haWwuY29tIiwiaWF0IjoxNzEyNDc5MjA2LCJleHAiOjE3MTUwNzEyMDZ9.YkeW5QHoVyX2GLBQu2whdQoedr0unthTtB5W6TosME8
 

@@ -8,7 +8,8 @@ import { findUserByEmail, findUserById } from "@/model/users.model";
 const router = Router();
 
 router.get("/", async (req, res) => {
-	const task = pipe(req.email, findUserByEmail);
+	const populate = req.query.populate as string | string[];
+	const task = pipe(req.email, findUserByEmail(populate));
 	const main = Effect.match(task, {
 		onSuccess(user) {
 			res.json({
@@ -33,7 +34,8 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-	const task = pipe(req.params.id, parseId, Effect.flatMap(findUserById));
+	const populate = req.query.populate as string | string[];
+	const task = pipe(req.params.id, parseId, Effect.flatMap(findUserById(populate)));
 	const main = Effect.match(task, {
 		onSuccess(user) {
 			res.json({

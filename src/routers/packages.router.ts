@@ -23,14 +23,13 @@ router.get("/", async (_, res) => {
 });
 
 router.post("/subscribe/:packageId", (req, res) => {
+	const populate = req.query.populate as string | string[];
 	const task = pipe(
 		req.params.packageId,
 		getPackage(packages),
 		Effect.tap((pkg) => paymentCharge({ price: pkg.price })),
 		Effect.flatMap(createPackage),
-		Effect.flatMap((pkg) =>
-			updateOneByEmail(req.email, { $push: { packages: [pkg.id!] } }, ["packages"])
-		)
+		Effect.flatMap((pkg) => updateOneByEmail(req.email, { $push: { packages: pkg.id! } }, populate))
 	);
 
 	const main = Effect.match(task, {
