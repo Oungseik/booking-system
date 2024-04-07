@@ -1,0 +1,33 @@
+
+# ========== Create user with duplicate email ===============
+POST http://localhost:8080/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "johndoe",
+    "email": "johndoe@gmail.com", 
+    "password": "12345678" 
+}
+
+
+###
+# ========== Create new user  ===============
+POST http://localhost:8080/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "oung",
+    "email": "oung@gmail.com", 
+    "password": "12345678" 
+}
+
+###
+# ========== Create new user with invalid input  ===============
+POST http://localhost:8080/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "oung",
+    "email": "oungmail.com", 
+    "password": "123456" 
+}
