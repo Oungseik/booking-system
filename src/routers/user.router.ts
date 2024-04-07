@@ -2,12 +2,12 @@ import bcrypt from "bcrypt";
 import { Effect, pipe } from "effect";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import { authenticateToken } from "@/middlewares/authentication.middleware";
 
-import { comparePasswd, parseLoginData, parseRegisterData } from "@/lib/parsers";
+import { comparePasswd, parseId, parseLoginData, parseRegisterData } from "@/lib/parsers";
 
 import config from "@/config";
-import { createUser, findUserByEmail } from "@/model/user.model";
+import { authenticateToken } from "@/middlewares/authentication.middleware";
+import { createUser, findUserByEmail, findUserById } from "@/model/user.model";
 
 const router = Router();
 
@@ -71,12 +71,45 @@ router.get("/", async (req, res) => {
 	const task = pipe(req.email, findUserByEmail);
 	const main = Effect.match(task, {
 		onSuccess(user) {
-			res.json({ email: user.email, name: user.name });
+			res.json({
+				id: user.id,
+				email: user.email,
+				name: user.name,
+				packages: user.packages,
+				classes: user.classes,
+			});
 		},
 		onFailure(e) {
 			switch (e._tag) {
 				case "NotExistError":
 					return res.status(404).json({ message: e.message });
+				case "DatabaseError":
+					return res.status(500).json({ message: e.message });
+			}
+		},
+	});
+
+	Effect.runPromise(main);
+});
+
+router.get("/:id", async (req, res) => {
+	const task = pipe(req.params.id, parseId, Effect.flatMap(findUserById));
+	const main = Effect.match(task, {
+		onSuccess(user) {
+			res.json({
+				id: user.id,
+				email: user.email,
+				name: user.name,
+				packages: user.packages,
+				classes: user.classes,
+			});
+		},
+		onFailure(e) {
+			switch (e._tag) {
+        // In the case of the id is invalid, consider as user not exist with that id
+				case "ParseError":
+				case "NotExistError":
+					return res.status(404).json({ message: "User does not exist" });
 				case "DatabaseError":
 					return res.status(500).json({ message: e.message });
 			}

@@ -3,33 +3,52 @@
  * */
 
 import { Effect, Option } from "effect";
-import { model, Schema } from "mongoose";
+import { type InferSchemaType, model, Schema, Types } from "mongoose";
 
 import { DatabaseError, DuplicateError, NotExistError } from "@/lib/errors";
-import type { User as UserType } from "@/lib/schemas";
 
-const userSchema = new Schema<UserType>(
+const userSchema = new Schema(
 	{
+		id: { type: Schema.Types.ObjectId, unique: true },
 		name: { type: String, required: true },
 		email: { type: String, required: true, unique: true },
-		password: { type: String, require: true },
+		password: { type: String, required: true },
+		packages: [{ type: Schema.Types.ObjectId, ref: "Package" }],
+		classes: [{ type: Schema.Types.ObjectId, ref: "Class" }],
 	},
 	{ timestamps: true }
 );
 
+userSchema.pre("save", function (next) {
+	this.id = this._id;
+	next();
+});
+
 export const User = model("User", userSchema);
 
-export const createUser = (user: UserType): Effect.Effect<UserType, DuplicateError, never> => {
+export type User = InferSchemaType<typeof userSchema>;
+
+export const createUser = (user: Partial<User>): Effect.Effect<User, DuplicateError, never> => {
 	return Effect.tryPromise({
 		try: () => User.create(user),
 		catch: () => new DuplicateError("Email already in used"),
 	});
 };
 
-export const findUserByEmail = (email: string) =>
+export const findUserByEmail = (
+	email: string
+): Effect.Effect<User, NotExistError | DatabaseError, never> => findOne({ email });
+
+export const findUserById = (
+	id: Types.ObjectId
+): Effect.Effect<User, NotExistError | DatabaseError, never> => findOne({ id });
+
+const findOne = (
+	entry: Partial<Pick<User, "email" | "id">>
+): Effect.Effect<User, NotExistError | DatabaseError, never> =>
 	Effect.tryPromise({
 		try: () =>
-			User.findOne({ email })
+			User.findOne(entry)
 				.then((user) => (user ? Option.some(user) : Option.none()))
 				.then(Option.getOrThrowWith(() => new NotExistError("User not exist"))),
 		catch: (e) => {

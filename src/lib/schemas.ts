@@ -11,8 +11,4 @@ export const registerSchema = loginSchema.extend({
 	name: z.string().min(4).max(20),
 });
 
-export type RegisterData = z.infer<typeof userSchema>;
-
-export const userSchema = registerSchema;
-
-export type User = z.infer<typeof userSchema>;
+export type RegisterData = z.infer<typeof registerSchema>;
