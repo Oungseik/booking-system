@@ -4,6 +4,14 @@ import express from "express";
 import { checkhealthRouter } from "./routers/checkhealth.router";
 import { userRouter } from "./routers/user.router";
 
+declare global {
+	namespace Express {
+		interface Request {
+			email: string;
+		}
+	}
+}
+
 const app = express();
 
 app.use(express.json());

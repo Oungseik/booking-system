@@ -1,5 +1,9 @@
+/**
+ * Mongoose model and collection of utility operations to deal with `users` document
+ * */
+
 import { Effect, Option } from "effect";
-import { model,Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
 import { DatabaseError, DuplicateError, NotExistError } from "@/lib/errors";
 import type { User as UserType } from "@/lib/schemas";

@@ -2,8 +2,9 @@ import bcrypt from "bcrypt";
 import { Effect, pipe } from "effect";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
+import { authenticateToken } from "@/middlewares/authentication.middleware";
 
-import { comparePasswd,parseLoginData, parseRegisterData } from "@/lib/parsers";
+import { comparePasswd, parseLoginData, parseRegisterData } from "@/lib/parsers";
 
 import config from "@/config";
 import { createUser, findUserByEmail } from "@/model/user.model";
@@ -63,5 +64,28 @@ router.post("/login", async (req, res) => {
 
 	Effect.runPromise(main);
 });
+
+router.use(authenticateToken);
+
+router.get("/", async (req, res) => {
+	const task = pipe(req.email, findUserByEmail);
+	const main = Effect.match(task, {
+		onSuccess(user) {
+			res.json({ email: user.email, name: user.name });
+		},
+		onFailure(e) {
+			switch (e._tag) {
+				case "NotExistError":
+					return res.status(404).json({ message: e.message });
+				case "DatabaseError":
+					return res.status(500).json({ message: e.message });
+			}
+		},
+	});
+
+	Effect.runPromise(main);
+});
+
+// TODO: should include change password and reset password
 
 export { router as userRouter };
