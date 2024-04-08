@@ -23,9 +23,11 @@ router.get("/", async (req, res) => {
 		onFailure(e) {
 			switch (e._tag) {
 				case "NotExistError":
-					return res.status(404).json({ message: e.message });
+					res.status(404).json({ message: e.message });
+					break;
 				case "DatabaseError":
-					return res.status(500).json({ message: e.message });
+					res.status(500).json({ message: e.message });
+					break;
 			}
 		},
 	});
@@ -51,9 +53,11 @@ router.get("/:id", async (req, res) => {
 				// In the case of the id is invalid, consider as user not exist with that id
 				case "ParseError":
 				case "NotExistError":
-					return res.status(404).json({ message: "User does not exist" });
+					res.status(404).json({ message: "User does not exist" });
+					break;
 				case "DatabaseError":
-					return res.status(500).json({ message: e.message });
+					res.status(500).json({ message: e.message });
+					break;
 			}
 		},
 	});

@@ -24,14 +24,16 @@ router.post("/register", async (req, res) => {
 
 	const main = Effect.match(task, {
 		onSuccess: () => {
-			return res.json({ status: "success" });
+			res.json({ status: "success" });
 		},
 		onFailure: (e) => {
 			switch (e._tag) {
 				case "ParseError":
-					return res.status(400).json({ error: "Invalid inputs", message: e.message });
+					res.status(400).json({ error: "Invalid inputs", message: e.message });
+					break;
 				case "DuplicateError":
-					return res.status(400).json({ error: "Email already in used", message: e.message });
+					res.status(400).json({ error: "Email already in used", message: e.message });
+					break;
 			}
 		},
 	});
@@ -55,13 +57,17 @@ router.post("/login", async (req, res) => {
 		onFailure: (e) => {
 			switch (e._tag) {
 				case "ParseError":
-					return res.status(400).json({ message: e.message });
+					res.status(400).json({ message: e.message });
+					break;
 				case "NotExistError":
-					return res.status(404).json({ message: e.message });
+					res.status(404).json({ message: e.message });
+					break;
 				case "AuthenticationError":
-					return res.status(404).json({ message: e.message });
+					res.status(404).json({ message: e.message });
+					break;
 				case "DatabaseError":
-					return res.status(500).json({ message: e.message });
+					res.status(500).json({ message: e.message });
+					break;
 			}
 		},
 	});
@@ -93,13 +99,17 @@ router.post("/change-password", async (req, res) => {
 		onFailure: (e) => {
 			switch (e._tag) {
 				case "ParseError":
-					return res.status(400).json({ message: e.message });
+					res.status(400).json({ message: e.message });
+					break;
 				case "NotExistError":
-					return res.status(404).json({ message: e.message });
+					res.status(404).json({ message: e.message });
+					break;
 				case "AuthenticationError":
-					return res.status(404).json({ message: e.message });
+					res.status(404).json({ message: e.message });
+					break;
 				case "DatabaseError":
-					return res.status(500).json({ message: e.message });
+					res.status(500).json({ message: e.message });
+					break;
 			}
 		},
 	});

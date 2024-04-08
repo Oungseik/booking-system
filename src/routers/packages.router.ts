@@ -39,10 +39,12 @@ router.post("/subscribe/:packageId", (req, res) => {
 		onFailure: (e) => {
 			switch (e._tag) {
 				case "NotExistError":
-					return res.status(404).json({ message: e.message });
+					res.status(404).json({ message: e.message });
+					break;
 				case "PaymentError":
 				case "DatabaseError":
-					return res.status(500).json({ message: e.message });
+					res.status(500).json({ message: e.message });
+					break;
 			}
 		},
 	});
