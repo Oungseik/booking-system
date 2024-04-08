@@ -11,7 +11,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91bmdAZ
 
 
 ###
-# =============== should get the package with specific country ==================
+# =============== should get the package with multiple country ==================
 GET http://localhost:8080/api/packages?country=Myanmar/MM&country=Singapore/SG HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91bmdAZ21haWwuY29tIiwiaWF0IjoxNzEyNDc5MjA2LCJleHAiOjE3MTUwNzEyMDZ9.YkeW5QHoVyX2GLBQu2whdQoedr0unthTtB5W6TosME8
