@@ -2,7 +2,7 @@
 
 include
  - [Project Structure](#project-structure)
- - [Design Approach](#motivations)
+ - [Design Approach](#design-approach)
 
 ## project Structure
 
@@ -20,7 +20,7 @@ There is two important folder, `src` which is the source code and `rest` api tes
         - `schemas.ts` - zod schemas to validate user inputs.
 
 --- 
-## Motivations
+## Design Approach
 
 One of the most notable package is [effect](https://effect.website/), which unlock the type safty in error handling.
 
