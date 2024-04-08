@@ -8,7 +8,7 @@ app.listen(config.port, () => {
 	logger.info("server is running on port:", config.port);
 
 	mongoose
-		.connect("mongodb://localhost:27017/booking_system")
+		.connect(config.dbUrl)
 		.then(() => {
 			logger.info("successfully connected to mongodb");
 		})
