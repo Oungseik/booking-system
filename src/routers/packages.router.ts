@@ -19,14 +19,12 @@ const getPackage = (pkgs: typeof packages) => (id: string) =>
 
 /** get all available packages */
 router.get("/", async (req, res) => {
-	const country = req.query.country;
+	const country = req.query.country as string | string[];
 	if (typeof country === "string") {
 		const result = Object.values(packages).filter((pkg) => pkg.country === country);
 		return res.json({ packages: result, total: result.length });
 	} else if (Array.isArray(country)) {
-		const result = Object.values(packages).filter((pkg) =>
-			(country as string[]).includes(pkg.country)
-		);
+		const result = Object.values(packages).filter((pkg) => country.includes(pkg.country));
 		return res.json({ packages: result, total: result.length });
 	}
 
