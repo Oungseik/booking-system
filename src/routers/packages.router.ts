@@ -58,7 +58,7 @@ router.post("/subscribe/:packageId", (req, res) => {
 		)
 	);
 
-	const main = Effect.match(task, {
+	const handler = Effect.match(task, {
 		onSuccess: ([_, pkg]) => {
 			res.json({ status: "success", pkg });
 		},
@@ -76,7 +76,7 @@ router.post("/subscribe/:packageId", (req, res) => {
 		},
 	});
 
-	Effect.runPromise(main);
+	Effect.runPromise(handler);
 });
 
 export { router as packagesRouter };

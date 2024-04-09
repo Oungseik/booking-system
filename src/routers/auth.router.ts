@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
 		Effect.flatMap((user) => createUser({ ...user, password: bcrypt.hashSync(user.password, 10) }))
 	);
 
-	const main = Effect.match(task, {
+	const handler = Effect.match(task, {
 		onSuccess: () => {
 			res.json({ status: "success" });
 		},
@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
 		},
 	});
 
-	Effect.runPromise(main);
+	Effect.runPromise(handler);
 });
 
 router.post("/login", async (req, res) => {
@@ -46,12 +46,14 @@ router.post("/login", async (req, res) => {
 		req.body,
 		parseLoginInput,
 		Effect.flatMap((body) => Effect.all([Effect.succeed(body), findUserByEmail(body.email)])),
-		Effect.tap(([input, user]) => comparePasswd(input.password, user.password))
+		Effect.tap(([input, user]) => comparePasswd(input.password, user.password)),
+		Effect.map(([_, user]) =>
+			jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: "30d" })
+		)
 	);
 
-	const main = Effect.match(task, {
-		onSuccess: ([_, user]) => {
-			const token = jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: "30d" });
+	const handler = Effect.match(task, {
+		onSuccess: (token) => {
 			res.json({ status: "success", token });
 		},
 		onFailure: (e) => {
@@ -72,7 +74,7 @@ router.post("/login", async (req, res) => {
 		},
 	});
 
-	Effect.runPromise(main);
+	Effect.runPromise(handler);
 });
 
 router.post("/change-password", async (req, res) => {
@@ -86,7 +88,7 @@ router.post("/change-password", async (req, res) => {
 		)
 	);
 
-	const main = Effect.match(task, {
+	const handler = Effect.match(task, {
 		onSuccess: (user) => {
 			res.json({
 				id: user.id,
@@ -114,7 +116,7 @@ router.post("/change-password", async (req, res) => {
 		},
 	});
 
-	Effect.runPromise(main);
+	Effect.runPromise(handler);
 });
 
 export { router as authRouter };

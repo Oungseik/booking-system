@@ -10,7 +10,7 @@ const router = Router();
 router.get("/", async (req, res) => {
 	const populate = req.query.populate as string | string[];
 	const task = pipe(req.email, (email) => findUserByEmail(email, populate));
-	const main = Effect.match(task, {
+	const handler = Effect.match(task, {
 		onSuccess(user) {
 			res.json({
 				id: user.id,
@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
 		},
 	});
 
-	Effect.runPromise(main);
+	Effect.runPromise(handler);
 });
 
 router.get("/:id", async (req, res) => {
