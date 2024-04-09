@@ -39,15 +39,15 @@ export const createUser = (user: Partial<User>): Effect.Effect<User, DuplicateEr
 	});
 };
 
-export const findUserByEmail =
-	(populate?: string | string[]) =>
-	(email: string): Effect.Effect<User, NotExistError | DatabaseError, never> =>
-		findOne({ email }, populate);
+export const findUserByEmail = (
+	email: string,
+	populate?: string | string[]
+): Effect.Effect<User, NotExistError | DatabaseError, never> => findOne({ email }, populate);
 
-export const findUserById =
-	(populate?: string | string[]) =>
-	(id: Types.ObjectId): Effect.Effect<User, NotExistError | DatabaseError, never> =>
-		findOne({ id }, populate);
+export const findUserById = (
+	id: Types.ObjectId,
+	populate?: string | string[]
+): Effect.Effect<User, NotExistError | DatabaseError, never> => findOne({ id }, populate);
 
 const findOne = (
 	entry: Partial<Pick<User, "email" | "id">>,
@@ -78,10 +78,8 @@ export const updateOneByEmail = (
 				.lean()
 				.then((user) => (user ? Option.some(user) : Option.none()))
 				.then(Option.getOrThrowWith(() => new NotExistError("User not exist"))),
-		catch: (e) => {
-			if (e instanceof NotExistError) {
-				return e;
-			}
-			return new DatabaseError("unexpected error occured while find user by email");
-		},
+		catch: (e) =>
+			e instanceof NotExistError
+				? e
+				: new DatabaseError("unexpected error occured while find user by email"),
 	});

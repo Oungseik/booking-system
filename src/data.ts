@@ -2,18 +2,18 @@ import type { Class } from "./model/classes.model";
 import type { Package } from "./model/packages.model";
 import type { User } from "./model/users.model";
 
-export const classes: Record<string, Class & { id: string }> = {
-	"mm-yg": { id: "mm-yg", place: "Myanmar/MM", credit: 5, name: "Yoga Class", duration: "1h" },
-	"mm-gm": { id: "mm-gm", place: "Myanmar/MM", credit: 10, name: "Gym Class", duration: "2h" },
-	"mm-dc": { id: "mm-dc", place: "Myanmar/MM", credit: 15, name: "Dance Class", duration: "3h" },
+export const classes: Record<string, Class & { uid: string }> = {
+	"mm-yg": { uid: "mm-yg", place: "Myanmar/MM", credit: 5, name: "Yoga Class", duration: "1h" },
+	"mm-gm": { uid: "mm-gm", place: "Myanmar/MM", credit: 10, name: "Gym Class", duration: "2h" },
+	"mm-dc": { uid: "mm-dc", place: "Myanmar/MM", credit: 15, name: "Dance Class", duration: "3h" },
 
-	"sg-yg": { id: "sg-yg", place: "Singapore/SG", credit: 5, name: "Yoga Class", duration: "1h" },
-	"sg-gm": { id: "sg-gm", place: "Singapore/SG", credit: 10, name: "Gym Class", duration: "2h" },
-	"sg-dc": { id: "sg-dc", place: "Singapore/SG", credit: 15, name: "Dance Class", duration: "3h" },
+	"sg-yg": { uid: "sg-yg", place: "Singapore/SG", credit: 5, name: "Yoga Class", duration: "1h" },
+	"sg-gm": { uid: "sg-gm", place: "Singapore/SG", credit: 10, name: "Gym Class", duration: "2h" },
+	"sg-dc": { uid: "sg-dc", place: "Singapore/SG", credit: 15, name: "Dance Class", duration: "3h" },
 
-	"my-yg": { id: "my-yg", place: "Malaysia/MY", credit: 5, name: "Yoga Class", duration: "1h" },
-	"my-gm": { id: "my-gm", place: "Malaysia/MY", credit: 10, name: "Gym Class", duration: "2h" },
-	"my-dc": { id: "my-dc", place: "Malaysia/MY", credit: 15, name: "Dance Class", duration: "3h" },
+	"my-yg": { uid: "my-yg", place: "Malaysia/MY", credit: 5, name: "Yoga Class", duration: "1h" },
+	"my-gm": { uid: "my-gm", place: "Malaysia/MY", credit: 10, name: "Gym Class", duration: "2h" },
+	"my-dc": { uid: "my-dc", place: "Malaysia/MY", credit: 15, name: "Dance Class", duration: "3h" },
 };
 
 export const packages: Record<string, Omit<Package, "createdAt" | "updatedAt"> & { uid: string }> =

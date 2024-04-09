@@ -45,7 +45,7 @@ router.post("/login", async (req, res) => {
 	const task = pipe(
 		req.body,
 		parseLoginInput,
-		Effect.flatMap((body) => Effect.all([Effect.succeed(body), findUserByEmail()(body.email)])),
+		Effect.flatMap((body) => Effect.all([Effect.succeed(body), findUserByEmail(body.email)])),
 		Effect.tap(([input, user]) => comparePasswd(input.password, user.password))
 	);
 
@@ -79,7 +79,7 @@ router.post("/change-password", async (req, res) => {
 	const task = pipe(
 		req.body,
 		parseChangePwInput,
-		Effect.flatMap((input) => Effect.all([Effect.succeed(input), findUserByEmail()(input.email)])),
+		Effect.flatMap((input) => Effect.all([Effect.succeed(input), findUserByEmail(input.email)])),
 		Effect.tap(([input, user]) => comparePasswd(input.password, user.password)),
 		Effect.flatMap(([input]) =>
 			updateOneByEmail(input.email, { password: bcrypt.hashSync(input.newPassword, 10) })

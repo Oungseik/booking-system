@@ -62,3 +62,14 @@ export class PaymentError extends Error {
 		}
 	}
 }
+
+export class BookingError extends Error {
+	readonly _tag = "BookingError";
+
+	constructor(message?: string) {
+		super();
+		if (message) {
+			this.message = message;
+		}
+	}
+}

@@ -6,15 +6,15 @@ import { paymentCharge } from "@/lib/mock";
 
 import { packages } from "@/data";
 
-import { createPackage } from "@/model/packages.model";
-import { updateOneByEmail } from "@/model/users.model";
+import { createPackage, type Package, updatePackageById } from "@/model/packages.model";
+import { updateOneByEmail, findUserByEmail } from "@/model/users.model";
 
 const router = Router();
 
 const getPackage = (pkgs: typeof packages) => (id: string) =>
 	Effect.try({
 		try: () => Option.fromNullable(pkgs[id]).pipe(Option.getOrThrow),
-		catch: () => new NotExistError(),
+		catch: () => new NotExistError("Package not exist"),
 	});
 
 /** get all available packages */
@@ -37,15 +37,33 @@ router.post("/subscribe/:packageId", (req, res) => {
 		req.params.packageId,
 		getPackage(packages),
 		Effect.tap((pkg) => paymentCharge({ price: pkg.price })),
-		Effect.flatMap(createPackage),
-		Effect.flatMap((pkg) => updateOneByEmail(req.email, { $push: { packages: pkg.id! } }, populate))
+		Effect.flatMap((pkg) =>
+			Effect.all([Effect.succeed(pkg), findUserByEmail(req.email, "packages")])
+		),
+		Effect.flatMap(([newPkg, user]) => {
+			const oldPkg = (user.packages as unknown as Package[])
+				.filter((p) => newPkg.uid === p.uid && !p.isExpired)
+				.at(0);
+			return oldPkg
+				? Effect.all([
+						Effect.succeed("UPDATED"),
+						updatePackageById(oldPkg.id!, { credit: newPkg.credit + oldPkg.credit }),
+					])
+				: Effect.all([Effect.succeed("CREATED"), createPackage(newPkg)]);
+		}),
+		Effect.tap(([status, pkg]) =>
+			status === "CREATED"
+				? updateOneByEmail(req.email, { $push: { packages: pkg.id! } }, populate)
+				: Effect.succeed("Do nothing on update")
+		)
 	);
 
 	const main = Effect.match(task, {
-		onSuccess: (user) => {
-			res.json({ status: "success", user });
+		onSuccess: ([_, pkg]) => {
+			res.json({ status: "success", pkg });
 		},
 		onFailure: (e) => {
+			console.log(e);
 			switch (e._tag) {
 				case "NotExistError":
 					res.status(404).json({ message: e.message });

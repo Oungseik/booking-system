@@ -66,6 +66,4 @@ const main = Effect.match(task, {
 });
 ```
 We can easily response the user with appropriate response.
-         
-    
 
